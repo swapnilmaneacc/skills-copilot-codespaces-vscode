@@ -1,56 +1,41 @@
-// create web server
-// create a route for comments
-// create a route for comments/:id
-// create a route for comments/:id/delete
-// create a route for comments/:id/edit
-// create a route for comments/:id/update
-
+//creat a web server
 const express = require('express');
-const router = express.Router();
-const fs = require('fs');
-
-// get comments from comments.json
-const comments = JSON.parse(fs.readFileSync('comments.json'));
-
-router.get('/', (req, res) => {
-    res.json(comments);
+const app = express();
+//install body-parser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+//create an array to store comments
+let comments = [];
+//set up a route to get all comments
+app.get('/comments', (req, res) => {
+  res.json(comments);
 });
-
-router.get('/:id', (req, res) => {
-    const comment = comments.find(c => c.id === parseInt(req.params.id));
-    if (!comment) return res.status(404).send('The comment with the given ID was not found.');
-    res.json(comment);
+//set up a route to post a new comment
+app.post('/comments', (req, res) => {
+  let comment = req.body;
+  comments.push(comment);
+  res.json(comment);
 });
-
-router.post('/', (req, res) => {
-    const comment = {
-        id: comments.length + 1,
-        name: req.body.name,
-        email: req.body.email,
-        body: req.body.body
-    };
-    comments.push(comment);
-    fs.writeFileSync('comments.json', JSON.stringify(comments));
-    res.json(comment);
+//set up a route to get a comment by id
+app.get('/comments/:id', (req, res) => {
+  let id = req.params.id;
+  let comment = comments[id];
+  res.json(comment);
 });
-
-router.delete('/:id', (req, res) => {
-    const comment = comments.find(c => c.id === parseInt(req.params.id));
-    if (!comment) return res.status(404).send('The comment with the given ID was not found.');
-    const index = comments.indexOf(comment);
-    comments.splice(index, 1);
-    fs.writeFileSync('comments.json', JSON.stringify(comments));
-    res.json(comment);
+//set up a route to delete a comment by id
+app.delete('/comments/:id', (req, res) => {
+  let id = req.params.id;
+  comments.splice(id, 1);
+  res.json(comments);
 });
-
-router.put('/:id', (req, res) => {
-    const comment = comments.find(c => c.id === parseInt(req.params.id));
-    if (!comment) return res.status(404).send('The comment with the given ID was not found.');
-    comment.name = req.body.name;
-    comment.email = req.body.email;
-    comment.body = req.body.body;
-    fs.writeFileSync('comments.json', JSON.stringify(comments));
-    res.json(comment);
+//set up a route to update a comment by id
+app.put('/comments/:id', (req, res) => {
+  let id = req.params.id;
+  let newComment = req.body;
+  comments[id] = newComment;
+  res.json(newComment);
 });
-
-module.exports = router;
+//start the server
+app.listen(3000, () => {
+  console.log('Server is running');
+});
