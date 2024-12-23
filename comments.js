@@ -1,13 +1,6 @@
-// create a web server
-// use express
-// use body-parser
-// use ejs
-// use express-session
-// use cookie-parser
-// use multer
-// use fs
-// use mysql
-// use mysql-promise
-// use crypto
-// use moment
-// use nodemailer
+// Create web server
+const express = require('express');
+const app = express();
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
