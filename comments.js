@@ -1,41 +1,24 @@
-//creat a web server
+// create a web server
+// 1. create a new project folder
+// 2. initialize the project with npm
+// 3. install express
+// 4. create a new file named comments.js
+// 5. create a new express app
+// 6. create a new get route for /comments
+// 7. send back some fake comments as JSON
+// 8. listen on a port
+
 const express = require('express');
 const app = express();
-//install body-parser
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-//create an array to store comments
-let comments = [];
-//set up a route to get all comments
+
 app.get('/comments', (req, res) => {
-  res.json(comments);
+    res.json([
+        {username: 'Todd', comment: 'lololol'},
+        {username: 'Skyler', comment: 'lmao'},
+        {username: 'Sk8erBoi', comment: 'rofl'}
+    ]);
 });
-//set up a route to post a new comment
-app.post('/comments', (req, res) => {
-  let comment = req.body;
-  comments.push(comment);
-  res.json(comment);
-});
-//set up a route to get a comment by id
-app.get('/comments/:id', (req, res) => {
-  let id = req.params.id;
-  let comment = comments[id];
-  res.json(comment);
-});
-//set up a route to delete a comment by id
-app.delete('/comments/:id', (req, res) => {
-  let id = req.params.id;
-  comments.splice(id, 1);
-  res.json(comments);
-});
-//set up a route to update a comment by id
-app.put('/comments/:id', (req, res) => {
-  let id = req.params.id;
-  let newComment = req.body;
-  comments[id] = newComment;
-  res.json(newComment);
-});
-//start the server
+
 app.listen(3000, () => {
-  console.log('Server is running');
+    console.log('Listening on http://localhost:3000');
 });
